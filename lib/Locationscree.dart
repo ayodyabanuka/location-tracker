@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -10,6 +12,16 @@ class locationtracker extends StatefulWidget {
 }
 
 class _locationtrackerState extends State<locationtracker> {
+  Timer? timer;
+
+  @override
+  void initState() {
+    Permission.locationWhenInUse.isGranted;
+    timer =
+        Timer.periodic(Duration(seconds: 3), (Timer t) => getCurrentLocation());
+    super.initState();
+  }
+
   var locationMessage = "";
 
   void getCurrentLocation() async {
@@ -47,17 +59,16 @@ class _locationtrackerState extends State<locationtracker> {
               height: 20.0,
             ),
             Text(locationMessage),
-            FlatButton(
-              onPressed: () {
-                Permission.locationWhenInUse.isGranted;
-                getCurrentLocation();
-              },
-              child: const Text(
-                "Get location",
-                style: TextStyle(color: Colors.white),
-              ),
-              color: Colors.blue,
-            )
+            // FlatButton(
+            //   onPressed: () {
+
+            //   },
+            //   child: const Text(
+            //     "Get location",
+            //     style: TextStyle(color: Colors.white),
+            //   ),
+            //   color: Colors.blue,
+            // )
           ],
         ),
       ),

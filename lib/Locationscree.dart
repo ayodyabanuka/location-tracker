@@ -1,8 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' show jsonEncode;
+import 'dart:convert';
+import 'dart:convert' show jsonDecode;
 
 class locationtracker extends StatefulWidget {
   locationtracker({Key? key}) : super(key: key);
@@ -13,6 +16,8 @@ class locationtracker extends StatefulWidget {
 
 class _locationtrackerState extends State<locationtracker> {
   Timer? timer;
+  String Api_Url =
+      'https://sindhizgroup.com.au/backenddomain.com/public/api/addlocation';
 
   @override
   void initState() {
@@ -29,10 +34,27 @@ class _locationtrackerState extends State<locationtracker> {
         desiredAccuracy: LocationAccuracy.high);
     var lastPosition = await Geolocator.getLastKnownPosition();
 
-    print(lastPosition);
-    setState(() {
-      locationMessage = "{$position}";
-    });
+    Object add = {
+      'location_management': position,
+    };
+    String Final = jsonEncode(add);
+    final Uri url = Uri.parse(Api_Url);
+    final http.Response response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'supportsCredentials': 'true',
+          'allowedOrigins': '*',
+          'allowedOriginsPatterns': '',
+          'allowedHeaders': '*',
+          'allowedMethods': '*',
+          'connection': 'keep-alive',
+        },
+        body: Final);
+
+    // print(lastPosition);
+    // setState(() {
+    //   locationMessage = "{$position}";
+    // });
   }
 
   @override
@@ -58,7 +80,7 @@ class _locationtrackerState extends State<locationtracker> {
             const SizedBox(
               height: 20.0,
             ),
-            Text(locationMessage),
+            // Text(locationMessage),
             // FlatButton(
             //   onPressed: () {
 

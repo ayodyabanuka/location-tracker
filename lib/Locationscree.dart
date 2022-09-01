@@ -17,7 +17,7 @@ class locationtracker extends StatefulWidget {
 class _locationtrackerState extends State<locationtracker> {
   Timer? timer;
   String Api_Url =
-      'https://sindhizgroup.com.au/backenddomain.com/public/api/addlocation';
+      'http://backenddomain.sindhizgroup.com.au/public/api/addlocation';
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _locationtrackerState extends State<locationtracker> {
     var lastPosition = await Geolocator.getLastKnownPosition();
 
     Object add = {
-      'location_management': position,
+      'current_location': position,
     };
     String Final = jsonEncode(add);
     final Uri url = Uri.parse(Api_Url);

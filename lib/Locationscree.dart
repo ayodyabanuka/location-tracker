@@ -33,6 +33,7 @@ class _locationtrackerState extends State<locationtracker> {
     // var lastPosition = await Geolocator.getLastKnownPosition();
     var latitude = position.latitude;
     var longtitude = position.longitude;
+    Fluttertoast.showToast(msg: 'updated location');
     _locationadd(latitude, longtitude);
     setState(() {
       locationMessagelatitude = latitude.toString();

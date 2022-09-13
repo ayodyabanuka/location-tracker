@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location_tracker/Providers/locationProvider.dart';
+import 'package:location_tracker/main.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:workmanager/workmanager.dart';
 
 class locationtracker extends StatefulWidget {
   locationtracker({Key? key}) : super(key: key);
@@ -13,76 +15,44 @@ class locationtracker extends StatefulWidget {
 }
 
 class _locationtrackerState extends State<locationtracker> {
-  Timer? timer;
+  // Timer? timer;
 
   @override
   void initState() {
-    Permission.locationWhenInUse.isGranted;
-    getCurrentLocation();
-    timer = Timer.periodic(
-        const Duration(seconds: 30), (Timer t) => getCurrentLocation());
-    super.initState();
+    requestLocationPermission();
+    Workmanager().registerPeriodicTask(
+      backrun,
+      backrun,
+      initialDelay: Duration(seconds: 10),
+    );
   }
 
-  var locationMessagelongtitude = "";
-  var locationMessagelatitude = "";
+  Future<void> requestLocationPermission() async {
+    final serviceStatusLocation = await Permission.locationWhenInUse.isGranted;
 
-  void getCurrentLocation() async {
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    // var lastPosition = await Geolocator.getLastKnownPosition();
-    var latitude = position.latitude;
-    var longtitude = position.longitude;
-    Fluttertoast.showToast(msg: 'updated location');
-    _locationadd(latitude, longtitude);
-    setState(() {
-      locationMessagelatitude = latitude.toString();
-      locationMessagelongtitude = longtitude.toString();
-    });
+    final status = await Permission.locationWhenInUse.request();
+
+    if (status == PermissionStatus.granted) {
+      print('Permission Granted');
+    } else if (status == PermissionStatus.denied) {
+      print('Permission denied');
+    } else if (status == PermissionStatus.permanentlyDenied) {
+      print('Permission Permanently Denied');
+      await openAppSettings();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Location Tracker')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.location_on,
-              size: 46,
-              color: Colors.blue,
-            ),
-            const SizedBox(
-              height: 10.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Latitude : " + locationMessagelatitude,
-                  ),
-                  Text(
-                    "Longtitude : " + locationMessagelongtitude,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20.0,
-            ),
-          ],
-        ),
+      appBar: AppBar(title: const Text('WELCOME')),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(child: Text('WELCOME')),
+          // ElevatedButton(onPressed: () {}, child: Text('Start'))
+        ],
       ),
     );
-  }
-
-  _locationadd(latitude, longtitude) async {
-    var res = await locationProvider().AddLocation(latitude, longtitude);
-    print(res.body);
   }
 }

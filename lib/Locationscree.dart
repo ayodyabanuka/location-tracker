@@ -20,11 +20,13 @@ class _locationtrackerState extends State<locationtracker> {
   @override
   void initState() {
     requestLocationPermission();
-    Workmanager().registerPeriodicTask(
-      backrun,
-      backrun,
-      initialDelay: Duration(seconds: 10),
-    );
+    timer = Timer.periodic(
+        Duration(seconds: 11),
+        (Timer t) => Workmanager().registerOneOffTask(
+              backrun,
+              backrun,
+              initialDelay: Duration(seconds: 10),
+            ));
   }
 
   Future<void> requestLocationPermission() async {

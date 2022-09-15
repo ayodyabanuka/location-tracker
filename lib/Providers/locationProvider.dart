@@ -6,7 +6,7 @@ class locationProvider with ChangeNotifier {
     //todo:
     return await http.post(
         Uri.parse(
-            'http://backenddomain.sindhizgroup.com.au/public/api/addlocation'),
+            'https://sindhizbackend.herokuapp.com/api/addlocation'),
         headers: _setHeaders(),
         body: _body(latitude, longtitude));
   }

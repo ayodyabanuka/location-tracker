@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
-
 import 'package:location_tracker/Providers/locationProvider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
